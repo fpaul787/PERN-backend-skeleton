@@ -1,2 +1,2 @@
-# mern-backend-setup
+# mern-backend-postgres
 # mern-backend-postgres
