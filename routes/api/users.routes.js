@@ -3,6 +3,9 @@ const express = require("express");
 const router = express.Router();
 // our model
 const User = require("../../models/User");
+
+const models = require("../../models/index");
+
 // method that helps with javascript arrays
 const { extend } = require("lodash");
 // utility that helps with error handling
@@ -17,37 +20,65 @@ const {
 // @desc  Get users
 // @access Public
 router.get("/", async (req, res) => {
-  // res.send('Get Users');
-  try {
-    let users = await User.find().select([
-      "name",
-      "email",
-      "updated",
-      "created",
-    ]);
-    res.json(users);
-  } catch (err) {
-    return res.status(400).json({
-      error: getErrorMessage(err),
+  //res.send("Get Users");
+  // try {
+  //   let users = await User.find().select([
+  //     "name",
+  //     "email",
+  //     "updated",
+  //     "created",
+  //   ]);
+  //   res.json(users);
+  // } catch (err) {
+  //   return res.status(400).json({
+  //     error: getErrorMessage(err),
+  //   });
+  // }
+
+  models.SmartUser.findAll({
+    attributes: ["name", "email", "updated", "created"],
+  })
+    .then((users) => {
+      return res.json(users);
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        error: error.message,
+      });
     });
-  }
 });
 
 // @route POST api/users
 // @desc  Create a user
 // @access Public
 router.post("/", async (req, res) => {
-  const user = new User(req.body);
-  try {
-    await user.save();
-    return res.status(200).json({
-      message: "Successfully signed up!",
+  // const user = new User(req.body);
+  // try {
+  //   await user.save();
+  //   return res.status(200).json({
+  //     message: "Successfully signed up!",
+  //   });
+  // } catch (err) {
+  //   return res.status(400).json({
+  //     error: getErrorMessage(err),
+  //   });
+  // }
+
+  models.SmartUser.create({
+    name: req.body.name,
+    email: req.body.email,
+    hashed_password: req.body.password,
+  })
+    .then(() =>
+      res.status(201).json({
+        message: "Successfully signed up!",
+      })
+    )
+    .catch((error) => {
+      return res.status(400).json({
+        error: error.message,
+      });
     });
-  } catch (err) {
-    return res.status(400).json({
-      error: getErrorMessage(err),
-    });
-  }
 });
 
 // @route PARAM userId

@@ -1,13 +1,17 @@
 const User = require("../models/User");
+const SmartUser = require("../models/index").SmartUser;
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const config = require("../config/config");
 
 const signin = async (req, res) => {
   try {
-    let user = await User.findOne({
-      email: req.body.email,
+    let user = await SmartUser.findOne({
+      where: {
+        email: req.body.email,
+      },
     });
+
     if (!user)
       return res.status("401").json({
         error: "Account information was incorrectly entered",
@@ -21,7 +25,7 @@ const signin = async (req, res) => {
 
     const token = jwt.sign(
       {
-        _id: user._id,
+        _id: user.id,
       },
       config.jwtSecret
     );
@@ -33,7 +37,7 @@ const signin = async (req, res) => {
     return res.json({
       token,
       user: {
-        _id: user._id,
+        _id: user.id,
         name: user.name,
         email: user.email,
       },

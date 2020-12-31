@@ -1,10 +1,15 @@
 // imports
 const express = require("express");
-const connectDB = require("./database");
+// const connectDB = require("./database");
+
+// import postgres db
+// const postgres_db = require("./postgres-setup");
 const app = express();
 
 // Connect Database
-connectDB();
+// connectDB();
+
+// postgres_db.create_tables();
 
 // Middleware
 app.use(express.json({ extended: false }));
