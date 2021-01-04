@@ -18,6 +18,16 @@ if (config.use_env_variable) {
     config.password,
     config
   );
+
+  sequelize.sync().then(
+    function () {
+      console.log("DB connection sucessful.");
+    },
+    function (err) {
+      // catch error here
+      console.log(err);
+    }
+  );
 }
 
 fs.readdirSync(__dirname)
